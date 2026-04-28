@@ -7,6 +7,11 @@ from app.core.config import settings
 from app.core.logging import configure_logging, get_logger
 from app.api.routes import health
 from app.api.middleware.error_handler import ErrorHandlerMiddleware
+from app.db.database import engine
+from app.db.base import Base
+from app.db.seed import seed_initial_account
+from sqlalchemy.ext.asyncio import AsyncSession
+from app.db.database import AsyncSessionLocal
 
 configure_logging()
 logger = get_logger(__name__)
@@ -41,9 +46,20 @@ async def startup_event() -> None:
         debug=settings.debug,
         log_level=settings.log_level,
     )
+    
+    # Create database tables
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
+    logger.info("Database tables created")
+    
+    # Seed initial account
+    async with AsyncSessionLocal() as session:
+        await seed_initial_account(session)
+    logger.info("Initial account seeded")
 
 
 @app.on_event("shutdown")
 async def shutdown_event() -> None:
     """Application shutdown handler."""
     logger.info("Application shutdown")
+    await engine.dispose()

@@ -1,5 +1,7 @@
 """Core application configuration."""
 
+from decimal import Decimal
+
 from pydantic_settings import BaseSettings
 
 
@@ -18,7 +20,7 @@ class Settings(BaseSettings):
     database_url: str = "sqlite:///./trading.db"
 
     # Default Account
-    default_cash_balance: float = 100000.00
+    default_cash_balance: Decimal = Decimal("100000.00")
 
     # Market Data
     market_data_cache_ttl: int = 300
