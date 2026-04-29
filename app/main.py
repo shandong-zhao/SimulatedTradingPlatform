@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import settings
 from app.core.logging import configure_logging, get_logger
-from app.api.routes import health
+from app.api.routes import health, market
 from app.api.middleware.error_handler import ErrorHandlerMiddleware
 from app.db.database import engine
 from app.db.base import Base
@@ -35,6 +35,7 @@ app.add_middleware(
 
 # Include routers
 app.include_router(health.router, tags=["health"])
+app.include_router(market.router)
 
 
 @app.on_event("startup")
@@ -46,12 +47,12 @@ async def startup_event() -> None:
         debug=settings.debug,
         log_level=settings.log_level,
     )
-    
+
     # Create database tables
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
     logger.info("Database tables created")
-    
+
     # Seed initial account
     async with AsyncSessionLocal() as session:
         await seed_initial_account(session)
