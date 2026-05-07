@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import settings
 from app.core.logging import configure_logging, get_logger
-from app.api.routes import health, market, trading
+from app.api.routes import health, market, portfolio, trading
 from app.api.middleware.error_handler import ErrorHandlerMiddleware
 from app.db.database import engine
 from app.db.base import Base
@@ -37,6 +37,7 @@ app.add_middleware(
 app.include_router(health.router, tags=["health"])
 app.include_router(market.router)
 app.include_router(trading.router)
+app.include_router(portfolio.router)
 
 
 @app.on_event("startup")
