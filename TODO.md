@@ -76,16 +76,16 @@
 - [x] 6.12 Add API documentation (auto-generated FastAPI docs)
 
 ## Phase 7: CLI / Interactive Interface
-- [ ] 7.1 Add `typer` or `click` CLI framework
-- [ ] 7.2 Implement `portfolio` command (show full portfolio)
-- [ ] 7.3 Implement `buy` command with interactive prompts
-- [ ] 7.4 Implement `sell` command with interactive prompts
-- [ ] 7.5 Implement `quote` command (quick price lookup)
-- [ ] 7.6 Implement `history` command (transaction history)
-- [ ] 7.7 Add colored output for better UX (`rich` library)
-- [ ] 7.8 Add confirmation prompts before executing trades
-- [ ] 7.9 Handle invalid inputs gracefully
-- [ ] 7.10 Write tests for CLI commands
+- [x] 7.1 Add `typer` or `click` CLI framework
+- [x] 7.2 Implement `portfolio` command (show full portfolio)
+- [x] 7.3 Implement `buy` command with interactive prompts
+- [x] 7.4 Implement `sell` command with interactive prompts
+- [x] 7.5 Implement `quote` command (quick price lookup)
+- [x] 7.6 Implement `history` command (transaction history)
+- [x] 7.7 Add colored output for better UX (`rich` library)
+- [x] 7.8 Add confirmation prompts before executing trades
+- [x] 7.9 Handle invalid inputs gracefully
+- [x] 7.10 Write tests for CLI commands
 
 ## Phase 8: Testing & Quality Assurance
 - [ ] 8.1 Set up `pytest` with fixtures
