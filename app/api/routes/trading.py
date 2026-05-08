@@ -10,6 +10,8 @@ from app.core.logging import get_logger
 from app.schemas.trading import (
     BuyQuote,
     BuyRequest,
+    ConfirmBuyRequest,
+    ConfirmSellRequest,
     QuoteRequest,
     SellQuote,
     SellRequest,
@@ -106,24 +108,24 @@ async def generate_quote(
     "/buy",
     response_model=TransactionResponse,
     status_code=status.HTTP_200_OK,
-    summary="Execute a buy order",
-    response_description="Returns the completed transaction",
+    summary="Preview a buy order",
+    response_description="Returns a pending buy transaction preview",
 )
-async def execute_buy(
+async def preview_buy(
     request: BuyRequest,
     db: AsyncSession = DbDependency,
 ) -> dict[str, Any]:
-    """Execute a buy order.
+    """Preview a buy order (creates a PENDING transaction).
 
     Args:
         request: The buy request details.
         db: Database session.
 
     Returns:
-        The completed TransactionResponse.
+        The pending TransactionResponse with preview details.
     """
     logger.info(
-        "Buy order requested",
+        "Buy preview requested",
         account_id=request.account_id,
         symbol=request.symbol,
         usd_amount=str(request.usd_amount),
@@ -140,7 +142,7 @@ async def execute_buy(
             usd_amount=request.usd_amount,
             asset_type=request.asset_type,
         )
-        transaction = await execution_service.execute_buy(
+        transaction = await execution_service.create_pending_buy(
             account_id=request.account_id,
             quote=quote,
             db_session=db,
@@ -151,10 +153,73 @@ async def execute_buy(
             detail=str(exc),
         ) from exc
     except Exception as exc:
-        logger.error("Buy execution failed", error=str(exc))
+        logger.error("Buy preview failed", error=str(exc))
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail=f"Unable to execute buy: {str(exc)}",
+            detail=f"Unable to preview buy: {str(exc)}",
+        ) from exc
+
+    return {
+        "id": transaction.id,
+        "account_id": transaction.account_id,
+        "type": transaction.type,
+        "asset_type": transaction.asset_type,
+        "symbol": transaction.symbol,
+        "exchange": transaction.exchange,
+        "quantity": transaction.quantity,
+        "price_per_unit": transaction.price_per_unit,
+        "currency": transaction.currency,
+        "exchange_rate": transaction.exchange_rate,
+        "usd_price_per_unit": transaction.usd_price_per_unit,
+        "total_usd_value": transaction.total_usd_value,
+        "fees": transaction.fees,
+        "status": transaction.status,
+        "timestamp": transaction.timestamp.isoformat() if transaction.timestamp else None,
+    }
+
+
+@router.post(
+    "/buy/confirm",
+    response_model=TransactionResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Confirm a pending buy order",
+    response_description="Returns the confirmed transaction",
+)
+async def confirm_buy(
+    request: ConfirmBuyRequest,
+    db: AsyncSession = DbDependency,
+) -> dict[str, Any]:
+    """Confirm a pending buy order and execute it.
+
+    Args:
+        request: The confirm request with transaction_id.
+        db: Database session.
+
+    Returns:
+        The confirmed TransactionResponse.
+    """
+    logger.info(
+        "Buy confirm requested",
+        transaction_id=request.transaction_id,
+    )
+
+    execution_service = TradingExecutionService()
+
+    try:
+        transaction = await execution_service.confirm_buy(
+            transaction_id=request.transaction_id,
+            db_session=db,
+        )
+    except ValueError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(exc),
+        ) from exc
+    except Exception as exc:
+        logger.error("Buy confirmation failed", error=str(exc))
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail=f"Unable to confirm buy: {str(exc)}",
         ) from exc
 
     return {
@@ -180,24 +245,24 @@ async def execute_buy(
     "/sell",
     response_model=TransactionResponse,
     status_code=status.HTTP_200_OK,
-    summary="Execute a sell order",
-    response_description="Returns the completed transaction",
+    summary="Preview a sell order",
+    response_description="Returns a pending sell transaction preview",
 )
-async def execute_sell(
+async def preview_sell(
     request: SellRequest,
     db: AsyncSession = DbDependency,
 ) -> dict[str, Any]:
-    """Execute a sell order.
+    """Preview a sell order (creates a PENDING transaction).
 
     Args:
         request: The sell request details.
         db: Database session.
 
     Returns:
-        The completed TransactionResponse.
+        The pending TransactionResponse with preview details.
     """
     logger.info(
-        "Sell order requested",
+        "Sell preview requested",
         account_id=request.account_id,
         symbol=request.symbol,
         quantity=str(request.quantity),
@@ -216,7 +281,7 @@ async def execute_sell(
             asset_type=request.asset_type,
             db_session=db,
         )
-        transaction = await execution_service.execute_sell(
+        transaction = await execution_service.create_pending_sell(
             account_id=request.account_id,
             quote=quote,
             db_session=db,
@@ -227,10 +292,73 @@ async def execute_sell(
             detail=str(exc),
         ) from exc
     except Exception as exc:
-        logger.error("Sell execution failed", error=str(exc))
+        logger.error("Sell preview failed", error=str(exc))
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail=f"Unable to execute sell: {str(exc)}",
+            detail=f"Unable to preview sell: {str(exc)}",
+        ) from exc
+
+    return {
+        "id": transaction.id,
+        "account_id": transaction.account_id,
+        "type": transaction.type,
+        "asset_type": transaction.asset_type,
+        "symbol": transaction.symbol,
+        "exchange": transaction.exchange,
+        "quantity": transaction.quantity,
+        "price_per_unit": transaction.price_per_unit,
+        "currency": transaction.currency,
+        "exchange_rate": transaction.exchange_rate,
+        "usd_price_per_unit": transaction.usd_price_per_unit,
+        "total_usd_value": transaction.total_usd_value,
+        "fees": transaction.fees,
+        "status": transaction.status,
+        "timestamp": transaction.timestamp.isoformat() if transaction.timestamp else None,
+    }
+
+
+@router.post(
+    "/sell/confirm",
+    response_model=TransactionResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Confirm a pending sell order",
+    response_description="Returns the confirmed transaction",
+)
+async def confirm_sell(
+    request: ConfirmSellRequest,
+    db: AsyncSession = DbDependency,
+) -> dict[str, Any]:
+    """Confirm a pending sell order and execute it.
+
+    Args:
+        request: The confirm request with transaction_id.
+        db: Database session.
+
+    Returns:
+        The confirmed TransactionResponse.
+    """
+    logger.info(
+        "Sell confirm requested",
+        transaction_id=request.transaction_id,
+    )
+
+    execution_service = TradingExecutionService()
+
+    try:
+        transaction = await execution_service.confirm_sell(
+            transaction_id=request.transaction_id,
+            db_session=db,
+        )
+    except ValueError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(exc),
+        ) from exc
+    except Exception as exc:
+        logger.error("Sell confirmation failed", error=str(exc))
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail=f"Unable to confirm sell: {str(exc)}",
         ) from exc
 
     return {

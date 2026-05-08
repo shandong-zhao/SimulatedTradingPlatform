@@ -1,79 +1,79 @@
 # Simulated Trading Platform - Implementation TODO
 
 ## Phase 1: Project Foundation
-- [ ] 1.1 Initialize Python project with `pyproject.toml` (Poetry or setuptools)
-- [ ] 1.2 Create virtual environment and install core dependencies
-- [ ] 1.3 Set up project directory structure (`app/`, `tests/`, `config/`, etc.)
-- [ ] 1.4 Configure environment variables (`.env` + `python-dotenv`)
-- [ ] 1.5 Add FastAPI, Uvicorn, SQLAlchemy, Alembic, Pydantic to dependencies
-- [ ] 1.6 Create basic FastAPI application entry point (`main.py`)
-- [ ] 1.7 Set up health check endpoint (`GET /health`)
-- [ ] 1.8 Configure logging (structured JSON logging)
-- [ ] 1.9 Add basic error handling middleware
-- [ ] 1.10 Write initial `README.md` with setup instructions
+- [x] 1.1 Initialize Python project with `pyproject.toml` (Poetry or setuptools)
+- [x] 1.2 Create virtual environment and install core dependencies
+- [x] 1.3 Set up project directory structure (`app/`, `tests/`, `config/`, etc.)
+- [x] 1.4 Configure environment variables (`.env` + `python-dotenv`)
+- [x] 1.5 Add FastAPI, Uvicorn, SQLAlchemy, Alembic, Pydantic to dependencies
+- [x] 1.6 Create basic FastAPI application entry point (`main.py`)
+- [x] 1.7 Set up health check endpoint (`GET /health`)
+- [x] 1.8 Configure logging (structured JSON logging)
+- [x] 1.9 Add basic error handling middleware
+- [x] 1.10 Write initial `README.md` with setup instructions
 
 ## Phase 2: Database & Data Models
-- [ ] 2.1 Configure SQLAlchemy with SQLite database
-- [ ] 2.2 Set up Alembic for database migrations
-- [ ] 2.3 Create `Account` model (id, cash_balance, created_at, updated_at)
-- [ ] 2.4 Create `StockHolding` model (id, account_id, symbol, exchange, currency, quantity, avg_cost_basis, total_invested)
-- [ ] 2.5 Create `CryptoHolding` model (id, account_id, symbol, quantity, avg_cost_basis, total_invested)
-- [ ] 2.6 Create `Transaction` model (id, account_id, type, asset_type, symbol, exchange, quantity, price_per_unit, currency, exchange_rate, usd_price_per_unit, total_usd_value, fees, timestamp, status)
-- [ ] 2.7 Create initial Alembic migration
-- [ ] 2.8 Seed initial account with default cash balance ($100,000)
-- [ ] 2.9 Write database fixture/setup utility
-- [ ] 2.10 Add database session dependency injection for FastAPI
+- [x] 2.1 Configure SQLAlchemy with SQLite database
+- [x] 2.2 Set up Alembic for database migrations
+- [x] 2.3 Create `Account` model (id, cash_balance, created_at, updated_at)
+- [x] 2.4 Create `StockHolding` model (id, account_id, symbol, exchange, currency, quantity, avg_cost_basis, total_invested)
+- [x] 2.5 Create `CryptoHolding` model (id, account_id, symbol, quantity, avg_cost_basis, total_invested)
+- [x] 2.6 Create `Transaction` model (id, account_id, type, asset_type, symbol, exchange, quantity, price_per_unit, currency, exchange_rate, usd_price_per_unit, total_usd_value, fees, timestamp, status)
+- [x] 2.7 Create initial Alembic migration
+- [x] 2.8 Seed initial account with default cash balance ($100,000)
+- [x] 2.9 Write database fixture/setup utility
+- [x] 2.10 Add database session dependency injection for FastAPI
 
 ## Phase 3: Market Data Integration
-- [ ] 3.1 Create `MarketDataProvider` abstract base class
-- [ ] 3.2 Implement Yahoo Finance client for stock prices (`yfinance` library)
-- [ ] 3.3 Implement CoinGecko client for crypto prices (`pycoingecko` library)
-- [ ] 3.4 Implement exchange rate service (USD conversion for non-US exchanges)
-- [ ] 3.5 Create unified price resolver that routes to correct provider
-- [ ] 3.6 Add in-memory caching for prices (5-minute TTL using `cachetools`)
-- [ ] 3.7 Handle API errors and rate limiting with retries
-- [ ] 3.8 Add fallback behavior when APIs are unavailable
-- [ ] 3.9 Write unit tests for market data clients (mock API responses)
-- [ ] 3.10 Add API endpoints for market data (`GET /api/market/price/:symbol`, `GET /api/market/rates/:from/:to`)
+- [x] 3.1 Create `MarketDataProvider` abstract base class
+- [x] 3.2 Implement Yahoo Finance client for stock prices (`yfinance` library)
+- [x] 3.3 Implement CoinGecko client for crypto prices (`pycoingecko` library)
+- [x] 3.4 Implement exchange rate service (USD conversion for non-US exchanges)
+- [x] 3.5 Create unified price resolver that routes to correct provider
+- [x] 3.6 Add in-memory caching for prices (5-minute TTL using `cachetools`)
+- [x] 3.7 Handle API errors and rate limiting with retries
+- [x] 3.8 Add fallback behavior when APIs are unavailable
+- [x] 3.9 Write unit tests for market data clients (mock API responses)
+- [x] 3.10 Add API endpoints for market data (`GET /api/market/price/:symbol`, `GET /api/market/rates/:from/:to`)
 
 ## Phase 4: Trading Engine Core
-- [ ] 4.1 Create `QuoteService` to calculate shares from USD amount
-- [ ] 4.2 Implement buy quote generation (fetch price, convert to USD, calculate quantity)
-- [ ] 4.3 Implement sell quote generation (validate holdings, calculate proceeds)
-- [ ] 4.4 Create transaction preview model (what-if scenario)
-- [ ] 4.5 Implement buy execution flow (deduct cash, add/update holdings, record transaction)
-- [ ] 4.6 Implement sell execution flow (remove/reduce holdings, add cash, record transaction)
-- [ ] 4.7 Implement average cost basis updates on buy
-- [ ] 4.8 Implement average cost basis updates on partial sell
-- [ ] 4.9 Add transaction status tracking (PENDING → CONFIRMED/CANCELLED)
-- [ ] 4.10 Write unit tests for trading engine calculations
-- [ ] 4.11 Write integration tests for buy/sell workflows
+- [x] 4.1 Create `QuoteService` to calculate shares from USD amount
+- [x] 4.2 Implement buy quote generation (fetch price, convert to USD, calculate quantity)
+- [x] 4.3 Implement sell quote generation (validate holdings, calculate proceeds)
+- [x] 4.4 Create transaction preview model (what-if scenario)
+- [x] 4.5 Implement buy execution flow (deduct cash, add/update holdings, record transaction)
+- [x] 4.6 Implement sell execution flow (remove/reduce holdings, add cash, record transaction)
+- [x] 4.7 Implement average cost basis updates on buy
+- [x] 4.8 Implement average cost basis updates on partial sell
+- [x] 4.9 Add transaction status tracking (PENDING → CONFIRMED/CANCELLED)
+- [x] 4.10 Write unit tests for trading engine calculations
+- [x] 4.11 Write integration tests for buy/sell workflows
 
 ## Phase 5: Portfolio Management
-- [ ] 5.1 Create `PortfolioService` to aggregate account data
-- [ ] 5.2 Implement cash balance retrieval
-- [ ] 5.3 Implement stock holdings list with average cost
-- [ ] 5.4 Implement crypto holdings list with average cost
-- [ ] 5.5 Calculate unrealized returns for each holding (current_value - cost_basis)
-- [ ] 5.6 Calculate percentage return for each holding
-- [ ] 5.7 Calculate total portfolio value (cash + holdings at current prices)
-- [ ] 5.8 Calculate total portfolio return
-- [ ] 5.9 Implement transaction history retrieval
-- [ ] 5.10 Write unit tests for portfolio calculations
+- [x] 5.1 Create `PortfolioService` to aggregate account data
+- [x] 5.2 Implement cash balance retrieval
+- [x] 5.3 Implement stock holdings list with average cost
+- [x] 5.4 Implement crypto holdings list with average cost
+- [x] 5.5 Calculate unrealized returns for each holding (current_value - cost_basis)
+- [x] 5.6 Calculate percentage return for each holding
+- [x] 5.7 Calculate total portfolio value (cash + holdings at current prices)
+- [x] 5.8 Calculate total portfolio return
+- [x] 5.9 Implement transaction history retrieval
+- [x] 5.10 Write unit tests for portfolio calculations
 
 ## Phase 6: API Endpoints
-- [ ] 6.1 Implement `GET /api/portfolio` endpoint
-- [ ] 6.2 Implement `GET /api/portfolio/holdings` endpoint
-- [ ] 6.3 Implement `GET /api/portfolio/transactions` endpoint
-- [ ] 6.4 Implement `POST /api/trading/quote` endpoint
-- [ ] 6.5 Implement `POST /api/trading/buy` endpoint (returns preview)
-- [ ] 6.6 Implement `POST /api/trading/buy/confirm` endpoint
-- [ ] 6.7 Implement `POST /api/trading/sell` endpoint (returns preview)
-- [ ] 6.8 Implement `POST /api/trading/sell/confirm` endpoint
-- [ ] 6.9 Add request/response validation with Pydantic schemas
-- [ ] 6.10 Add proper HTTP error responses (400, 404, 422, 500)
-- [ ] 6.11 Write integration tests for all endpoints
-- [ ] 6.12 Add API documentation (auto-generated FastAPI docs)
+- [x] 6.1 Implement `GET /api/portfolio` endpoint
+- [x] 6.2 Implement `GET /api/portfolio/holdings` endpoint
+- [x] 6.3 Implement `GET /api/portfolio/transactions` endpoint
+- [x] 6.4 Implement `POST /api/trading/quote` endpoint
+- [x] 6.5 Implement `POST /api/trading/buy` endpoint (returns preview)
+- [x] 6.6 Implement `POST /api/trading/buy/confirm` endpoint
+- [x] 6.7 Implement `POST /api/trading/sell` endpoint (returns preview)
+- [x] 6.8 Implement `POST /api/trading/sell/confirm` endpoint
+- [x] 6.9 Add request/response validation with Pydantic schemas
+- [x] 6.10 Add proper HTTP error responses (400, 404, 422, 500)
+- [x] 6.11 Write integration tests for all endpoints
+- [x] 6.12 Add API documentation (auto-generated FastAPI docs)
 
 ## Phase 7: CLI / Interactive Interface
 - [ ] 7.1 Add `typer` or `click` CLI framework
