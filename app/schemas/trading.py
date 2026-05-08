@@ -69,6 +69,18 @@ class TransactionPreview(BaseModel):
     quote: BuyQuote | SellQuote = Field(..., description="The quote details")
 
 
+class ConfirmBuyRequest(BaseModel):
+    """Request model for confirming a pending buy transaction."""
+
+    transaction_id: str = Field(..., description="The pending transaction ID to confirm")
+
+
+class ConfirmSellRequest(BaseModel):
+    """Request model for confirming a pending sell transaction."""
+
+    transaction_id: str = Field(..., description="The pending transaction ID to confirm")
+
+
 class TransactionResponse(BaseModel):
     """Response model for a completed transaction."""
 
