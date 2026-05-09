@@ -100,16 +100,16 @@
 - [x] 8.10 Write test for cost basis calculation edge cases
 
 ## Phase 9: Documentation & Polish
-- [ ] 9.1 Complete `README.md` with full setup and usage instructions
-- [ ] 9.2 Add API usage examples (curl commands)
-- [ ] 9.3 Add CLI usage examples
-- [ ] 9.4 Document supported exchanges and cryptocurrencies
-- [ ] 9.5 Add architecture diagram to documentation
-- [ ] 9.6 Add configuration reference (all env variables)
-- [ ] 9.7 Add troubleshooting guide
-- [ ] 9.8 Final code review and cleanup
-- [ ] 9.9 Verify all TODO items are complete
-- [ ] 9.10 Tag v1.0.0 release
+- [x] 9.1 Complete `README.md` with full setup and usage instructions
+- [x] 9.2 Add API usage examples (curl commands)
+- [x] 9.3 Add CLI usage examples
+- [x] 9.4 Document supported exchanges and cryptocurrencies
+- [x] 9.5 Add architecture diagram to documentation
+- [x] 9.6 Add configuration reference (all env variables)
+- [x] 9.7 Add troubleshooting guide
+- [x] 9.8 Final code review and cleanup
+- [x] 9.9 Verify all TODO items are complete
+- [x] 9.10 Tag v1.0.0 release
 
 ---
 

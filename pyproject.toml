@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "simulated-trading-platform"
-version = "0.1.0"
+version = "1.0.0"
 description = "A simulated trading platform for stocks and crypto with real market data"
 readme = "README.md"
 license = {text = "MIT"}
