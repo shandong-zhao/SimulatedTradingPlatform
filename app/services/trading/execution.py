@@ -112,7 +112,9 @@ class TradingExecutionService:
         if transaction is None:
             raise ValueError(f"Transaction {transaction_id} not found")
         if transaction.status != "PENDING":
-            raise ValueError(f"Transaction {transaction_id} is not pending (status={transaction.status})")
+            raise ValueError(
+                f"Transaction {transaction_id} is not pending (status={transaction.status})"
+            )
         if transaction.type != "buy":
             raise ValueError(f"Transaction {transaction_id} is not a buy order")
 
@@ -313,7 +315,9 @@ class TradingExecutionService:
         if transaction is None:
             raise ValueError(f"Transaction {transaction_id} not found")
         if transaction.status != "PENDING":
-            raise ValueError(f"Transaction {transaction_id} is not pending (status={transaction.status})")
+            raise ValueError(
+                f"Transaction {transaction_id} is not pending (status={transaction.status})"
+            )
         if transaction.type != "sell":
             raise ValueError(f"Transaction {transaction_id} is not a sell order")
 

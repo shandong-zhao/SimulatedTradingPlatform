@@ -1,10 +1,8 @@
 """Tests for portfolio service — holdings, summary, and transaction history."""
 
 from decimal import Decimal
-from unittest.mock import AsyncMock
 
 import pytest
-from sqlalchemy import select
 
 from app.models import Account, CryptoHolding, StockHolding, Transaction
 from app.services.portfolio.portfolio import PortfolioService
@@ -74,7 +72,9 @@ class TestPortfolioService:
         assert portfolio.total_value == Decimal("100100.00")  # 98500 + 1600
         assert portfolio.total_invested == Decimal("1500.00")
         assert portfolio.total_unrealized_pnl == Decimal("100.00")  # 1600 - 1500
-        assert portfolio.total_return_pct == Decimal("6.666666666666666666666666667")  # (100/1500)*100
+        assert portfolio.total_return_pct == Decimal(
+            "6.666666666666666666666666667"
+        )  # (100/1500)*100
 
         # Check individual holding detail
         assert len(portfolio.stock_holdings) == 1
@@ -245,7 +245,7 @@ class TestPortfolioService:
         db_session.add(account)
         await db_session.commit()
 
-        for i in range(5):
+        for _i in range(5):
             tx = Transaction(
                 account_id=account.id,
                 type="buy",

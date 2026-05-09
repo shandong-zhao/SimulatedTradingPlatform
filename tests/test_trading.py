@@ -1,12 +1,11 @@
 """Tests for trading engine — quotes, execution, and API endpoints."""
 
 from decimal import Decimal
-from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 from sqlalchemy import select
 
-from app.models import Account, CryptoHolding, StockHolding, Transaction
+from app.models import Account, CryptoHolding, StockHolding
 from app.schemas.trading import BuyQuote, SellQuote
 from app.services.trading.execution import TradingExecutionService
 from app.services.trading.quote import QuoteService

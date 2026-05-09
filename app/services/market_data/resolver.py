@@ -1,8 +1,8 @@
 """Unified price resolver with caching and fallback support."""
 
+from collections.abc import Callable
 from decimal import Decimal
 from functools import wraps
-from typing import Callable
 
 from cachetools import TTLCache
 from tenacity import (
@@ -69,7 +69,7 @@ def _with_cache(func: Callable) -> Callable:
 
     @wraps(func)
     async def wrapper(self: "PriceResolver", symbol: str) -> Decimal:  # type: ignore[return]
-        provider_name = self._primary.__class__.__name__
+        provider_name = self._get_primary_provider(symbol).__class__.__name__
         key = _cache_key(provider_name, symbol)
 
         if key in _price_cache:
@@ -115,7 +115,7 @@ class PriceResolver:
             return self._coingecko
         return self._yahoo
 
-    def _get_fallback_provider(self, symbol: str) -> MarketDataProvider | None:
+    async def _get_fallback_provider(self, symbol: str) -> MarketDataProvider | None:
         """Get the fallback provider for a symbol.
 
         Args:
@@ -125,8 +125,12 @@ class PriceResolver:
             The fallback market data provider, or None if no fallback.
         """
         if self._is_crypto(symbol):
-            return self._yahoo if self._yahoo.is_available() else None
-        return self._coingecko if self._coingecko.is_available() else None
+            if await self._yahoo.is_available():
+                return self._yahoo
+            return None
+        if await self._coingecko.is_available():
+            return self._coingecko
+        return None
 
     @_with_cache
     @retry(
@@ -148,7 +152,7 @@ class PriceResolver:
             Exception: If no provider can retrieve the price.
         """
         primary = self._get_primary_provider(symbol)
-        fallback = self._get_fallback_provider(symbol)
+        fallback = await self._get_fallback_provider(symbol)
 
         # Try primary provider
         try:

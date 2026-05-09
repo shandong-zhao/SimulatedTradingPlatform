@@ -88,16 +88,16 @@
 - [x] 7.10 Write tests for CLI commands
 
 ## Phase 8: Testing & Quality Assurance
-- [ ] 8.1 Set up `pytest` with fixtures
-- [ ] 8.2 Set up test database (in-memory SQLite)
-- [ ] 8.3 Write unit tests for all services (market, trading, portfolio)
-- [ ] 8.4 Write integration tests for API endpoints
-- [ ] 8.5 Set up code coverage reporting (`pytest-cov`)
-- [ ] 8.6 Set up linting (`ruff` or `flake8` + `black`)
-- [ ] 8.7 Set up type checking (`mypy`)
-- [ ] 8.8 Add pre-commit hooks for linting and formatting
-- [ ] 8.9 Write test for currency conversion logic
-- [ ] 8.10 Write test for cost basis calculation edge cases
+- [x] 8.1 Set up `pytest` with fixtures
+- [x] 8.2 Set up test database (in-memory SQLite)
+- [x] 8.3 Write unit tests for all services (market, trading, portfolio)
+- [x] 8.4 Write integration tests for API endpoints
+- [x] 8.5 Set up code coverage reporting (`pytest-cov`)
+- [x] 8.6 Set up linting (`ruff` or `flake8` + `black`)
+- [x] 8.7 Set up type checking (`mypy`)
+- [x] 8.8 Add pre-commit hooks for linting and formatting
+- [x] 8.9 Write test for currency conversion logic
+- [x] 8.10 Write test for cost basis calculation edge cases
 
 ## Phase 9: Documentation & Polish
 - [ ] 9.1 Complete `README.md` with full setup and usage instructions

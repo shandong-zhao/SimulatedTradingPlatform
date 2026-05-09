@@ -3,15 +3,13 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.api.middleware.error_handler import ErrorHandlerMiddleware
+from app.api.routes import health, market, portfolio, trading
 from app.core.config import settings
 from app.core.logging import configure_logging, get_logger
-from app.api.routes import health, market, portfolio, trading
-from app.api.middleware.error_handler import ErrorHandlerMiddleware
-from app.db.database import engine
 from app.db.base import Base
+from app.db.database import AsyncSessionLocal, engine
 from app.db.seed import seed_initial_account
-from sqlalchemy.ext.asyncio import AsyncSession
-from app.db.database import AsyncSessionLocal
 
 configure_logging()
 logger = get_logger(__name__)

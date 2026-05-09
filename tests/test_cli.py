@@ -3,7 +3,6 @@
 from decimal import Decimal
 from unittest.mock import AsyncMock, MagicMock, patch
 
-import pytest
 from typer.testing import CliRunner
 
 from app.cli import app
@@ -14,6 +13,7 @@ runner = CliRunner()
 # ------------------------------------------------------------------
 # Portfolio Command Tests
 # ------------------------------------------------------------------
+
 
 class TestPortfolioCommand:
     """Test portfolio CLI command."""
@@ -61,7 +61,9 @@ class TestPortfolioCommand:
     @patch("app.cli.PortfolioService")
     @patch("app.cli._get_first_account")
     @patch("app.cli.AsyncSessionLocal")
-    def test_portfolio_with_holdings(self, mock_session_class, mock_get_account, mock_portfolio_service):
+    def test_portfolio_with_holdings(
+        self, mock_session_class, mock_get_account, mock_portfolio_service
+    ):
         """Test portfolio command with stock and crypto holdings."""
         from app.schemas.portfolio import CryptoHoldingDetail, PortfolioSummary, StockHoldingDetail
 
@@ -126,6 +128,7 @@ class TestPortfolioCommand:
 # Quote Command Tests
 # ------------------------------------------------------------------
 
+
 class TestQuoteCommand:
     """Test quote CLI command."""
 
@@ -160,6 +163,7 @@ class TestQuoteCommand:
 # Buy Command Tests
 # ------------------------------------------------------------------
 
+
 class TestBuyCommand:
     """Test buy CLI command."""
 
@@ -168,7 +172,14 @@ class TestBuyCommand:
     @patch("app.cli.QuoteService")
     @patch("app.cli._get_first_account")
     @patch("app.cli.AsyncSessionLocal")
-    def test_buy_success(self, mock_session_class, mock_get_account, mock_quote_service, mock_exec_service, mock_confirm):
+    def test_buy_success(
+        self,
+        mock_session_class,
+        mock_get_account,
+        mock_quote_service,
+        mock_exec_service,
+        mock_confirm,
+    ):
         """Test successful buy command with all options."""
         from app.schemas.trading import BuyQuote
 
@@ -217,14 +228,22 @@ class TestBuyCommand:
         mock_session_class.return_value.__aenter__ = AsyncMock(return_value=mock_session)
         mock_session_class.return_value.__aexit__ = AsyncMock(return_value=False)
 
-        result = runner.invoke(app, [
-            "buy",
-            "--symbol", "AAPL",
-            "--exchange", "NASDAQ",
-            "--currency", "USD",
-            "--asset-type", "stock",
-            "--usd-amount", "1500",
-        ])
+        result = runner.invoke(
+            app,
+            [
+                "buy",
+                "--symbol",
+                "AAPL",
+                "--exchange",
+                "NASDAQ",
+                "--currency",
+                "USD",
+                "--asset-type",
+                "stock",
+                "--usd-amount",
+                "1500",
+            ],
+        )
 
         assert result.exit_code == 0
         mock_qs.generate_buy_quote.assert_called_once()
@@ -235,7 +254,9 @@ class TestBuyCommand:
     @patch("app.cli.QuoteService")
     @patch("app.cli._get_first_account")
     @patch("app.cli.AsyncSessionLocal")
-    def test_buy_cancelled(self, mock_session_class, mock_get_account, mock_quote_service, mock_confirm):
+    def test_buy_cancelled(
+        self, mock_session_class, mock_get_account, mock_quote_service, mock_confirm
+    ):
         """Test buy command when user cancels."""
         from app.schemas.trading import BuyQuote
 
@@ -267,14 +288,22 @@ class TestBuyCommand:
         mock_session_class.return_value.__aenter__ = AsyncMock(return_value=mock_session)
         mock_session_class.return_value.__aexit__ = AsyncMock(return_value=False)
 
-        result = runner.invoke(app, [
-            "buy",
-            "--symbol", "AAPL",
-            "--exchange", "NASDAQ",
-            "--currency", "USD",
-            "--asset-type", "stock",
-            "--usd-amount", "1500",
-        ])
+        result = runner.invoke(
+            app,
+            [
+                "buy",
+                "--symbol",
+                "AAPL",
+                "--exchange",
+                "NASDAQ",
+                "--currency",
+                "USD",
+                "--asset-type",
+                "stock",
+                "--usd-amount",
+                "1500",
+            ],
+        )
 
         assert result.exit_code == 0
         assert "cancelled" in result.output.lower() or "Cancelled" in result.output
@@ -284,6 +313,7 @@ class TestBuyCommand:
 # Sell Command Tests
 # ------------------------------------------------------------------
 
+
 class TestSellCommand:
     """Test sell CLI command."""
 
@@ -292,7 +322,14 @@ class TestSellCommand:
     @patch("app.cli.QuoteService")
     @patch("app.cli._get_first_account")
     @patch("app.cli.AsyncSessionLocal")
-    def test_sell_success(self, mock_session_class, mock_get_account, mock_quote_service, mock_exec_service, mock_confirm):
+    def test_sell_success(
+        self,
+        mock_session_class,
+        mock_get_account,
+        mock_quote_service,
+        mock_exec_service,
+        mock_confirm,
+    ):
         """Test successful sell command with all options."""
         from app.schemas.trading import SellQuote
 
@@ -341,14 +378,22 @@ class TestSellCommand:
         mock_session_class.return_value.__aenter__ = AsyncMock(return_value=mock_session)
         mock_session_class.return_value.__aexit__ = AsyncMock(return_value=False)
 
-        result = runner.invoke(app, [
-            "sell",
-            "--symbol", "AAPL",
-            "--exchange", "NASDAQ",
-            "--currency", "USD",
-            "--asset-type", "stock",
-            "--quantity", "5",
-        ])
+        result = runner.invoke(
+            app,
+            [
+                "sell",
+                "--symbol",
+                "AAPL",
+                "--exchange",
+                "NASDAQ",
+                "--currency",
+                "USD",
+                "--asset-type",
+                "stock",
+                "--quantity",
+                "5",
+            ],
+        )
 
         assert result.exit_code == 0
         mock_qs.generate_sell_quote.assert_called_once()
@@ -359,6 +404,7 @@ class TestSellCommand:
 # ------------------------------------------------------------------
 # History Command Tests
 # ------------------------------------------------------------------
+
 
 class TestHistoryCommand:
     """Test history CLI command."""
@@ -388,7 +434,9 @@ class TestHistoryCommand:
     @patch("app.cli.PortfolioService")
     @patch("app.cli._get_first_account")
     @patch("app.cli.AsyncSessionLocal")
-    def test_history_with_transactions(self, mock_session_class, mock_get_account, mock_portfolio_service):
+    def test_history_with_transactions(
+        self, mock_session_class, mock_get_account, mock_portfolio_service
+    ):
         """Test history command with transactions."""
         from app.schemas.portfolio import TransactionHistoryItem
 

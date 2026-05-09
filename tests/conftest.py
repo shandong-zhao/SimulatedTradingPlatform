@@ -1,31 +1,25 @@
 """Pytest configuration and fixtures."""
 
-import tempfile
-import uuid
+from unittest.mock import patch
 
 import pytest
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 
 from app.db.base import Base
-from app.models import Account, StockHolding, CryptoHolding, Transaction
+
+# Prevent structlog from interfering with pytest's logging capture
+patch("app.core.logging.configure_logging").start()
 
 
 @pytest.fixture
 async def db_engine():
     """Create a test database engine."""
-    db_path = tempfile.mktemp(suffix=".db")
-    url = f"sqlite+aiosqlite:///{db_path}"
-    engine = create_async_engine(url, echo=False)
+    engine = create_async_engine("sqlite+aiosqlite:///:memory:", echo=False)
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
     yield engine
     await engine.dispose()
-    import os
-    try:
-        os.unlink(db_path)
-    except FileNotFoundError:
-        pass
 
 
 @pytest.fixture
