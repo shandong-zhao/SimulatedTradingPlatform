@@ -126,7 +126,9 @@ async def get_transactions(
 
     service = PortfolioService()
     try:
-        transactions = await service.get_transaction_history(account_id, db, limit=limit, offset=offset)
+        transactions = await service.get_transaction_history(
+            account_id, db, limit=limit, offset=offset
+        )
     except ValueError as exc:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,

@@ -1,6 +1,5 @@
 """Exchange rate service for currency conversion."""
 
-import asyncio
 from decimal import Decimal, InvalidOperation
 
 import httpx

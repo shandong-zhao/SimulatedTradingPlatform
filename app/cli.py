@@ -2,7 +2,6 @@
 
 import asyncio
 from decimal import Decimal
-from typing import Optional
 
 import typer
 from rich import box
@@ -13,11 +12,9 @@ from rich.table import Table
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core.config import settings
 from app.core.logging import configure_logging, get_logger
 from app.db.database import AsyncSessionLocal
-from app.models import Account, Transaction
-from app.schemas.trading import BuyQuote, SellQuote
+from app.models import Account
 from app.services.market_data.resolver import PriceResolver
 from app.services.portfolio.portfolio import PortfolioService
 from app.services.trading.execution import TradingExecutionService
@@ -37,6 +34,7 @@ def _ensure_logging() -> None:
 
 
 logger = get_logger(__name__)
+
 
 async def _get_first_account(session: AsyncSession) -> Account:
     """Get the first (and typically only) account."""
@@ -67,6 +65,7 @@ def _format_quantity(value: Decimal) -> str:
 # ------------------------------------------------------------------
 # Portfolio Command
 # ------------------------------------------------------------------
+
 
 @app.command(name="portfolio")
 def portfolio_command():
@@ -185,6 +184,7 @@ def portfolio_command():
 # Quote Command
 # ------------------------------------------------------------------
 
+
 @app.command(name="quote")
 def quote_command(
     symbol: str = typer.Argument(..., help="Asset symbol (e.g., AAPL, bitcoin)"),
@@ -215,13 +215,14 @@ def quote_command(
 # Buy Command
 # ------------------------------------------------------------------
 
+
 @app.command(name="buy")
 def buy_command(
-    symbol: Optional[str] = typer.Option(None, help="Asset symbol"),
-    exchange: Optional[str] = typer.Option(None, help="Exchange code (e.g., NASDAQ, BINANCE)"),
-    currency: Optional[str] = typer.Option(None, help="Currency code (e.g., USD, GBP)"),
-    asset_type: Optional[str] = typer.Option(None, help="Asset type: stock or crypto"),
-    usd_amount: Optional[str] = typer.Option(None, help="Amount in USD to invest"),
+    symbol: str | None = typer.Option(None, help="Asset symbol"),
+    exchange: str | None = typer.Option(None, help="Exchange code (e.g., NASDAQ, BINANCE)"),
+    currency: str | None = typer.Option(None, help="Currency code (e.g., USD, GBP)"),
+    asset_type: str | None = typer.Option(None, help="Asset type: stock or crypto"),
+    usd_amount: str | None = typer.Option(None, help="Amount in USD to invest"),
 ):
     """Interactive buy command. Prompts for missing fields and asks for confirmation."""
 
@@ -323,13 +324,14 @@ def buy_command(
 # Sell Command
 # ------------------------------------------------------------------
 
+
 @app.command(name="sell")
 def sell_command(
-    symbol: Optional[str] = typer.Option(None, help="Asset symbol"),
-    exchange: Optional[str] = typer.Option(None, help="Exchange code"),
-    currency: Optional[str] = typer.Option(None, help="Currency code"),
-    asset_type: Optional[str] = typer.Option(None, help="Asset type: stock or crypto"),
-    quantity: Optional[str] = typer.Option(None, help="Quantity to sell"),
+    symbol: str | None = typer.Option(None, help="Asset symbol"),
+    exchange: str | None = typer.Option(None, help="Exchange code"),
+    currency: str | None = typer.Option(None, help="Currency code"),
+    asset_type: str | None = typer.Option(None, help="Asset type: stock or crypto"),
+    quantity: str | None = typer.Option(None, help="Quantity to sell"),
 ):
     """Interactive sell command. Prompts for missing fields and asks for confirmation."""
 
@@ -437,6 +439,7 @@ def sell_command(
 # History Command
 # ------------------------------------------------------------------
 
+
 @app.command(name="history")
 def history_command(
     limit: int = typer.Option(20, help="Number of transactions to show"),
@@ -506,6 +509,7 @@ def history_command(
 # ------------------------------------------------------------------
 # Entry point
 # ------------------------------------------------------------------
+
 
 def main():
     """CLI entry point."""

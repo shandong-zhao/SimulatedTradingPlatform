@@ -7,7 +7,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.logging import get_logger
-from app.models import Account, CryptoHolding, StockHolding, Transaction
+from app.models import Account, Transaction
 from app.schemas.portfolio import (
     CryptoHoldingDetail,
     PortfolioSummary,
@@ -45,9 +45,7 @@ class PortfolioService:
         """
         logger.info("Fetching portfolio", account_id=account_id)
 
-        result = await db_session.execute(
-            select(Account).where(Account.id == account_id)
-        )
+        result = await db_session.execute(select(Account).where(Account.id == account_id))
         account = result.scalar_one_or_none()
         if account is None:
             raise ValueError(f"Account {account_id} not found")
@@ -160,9 +158,7 @@ class PortfolioService:
         Returns:
             Dict with stock_holdings and crypto_holdings lists.
         """
-        result = await db_session.execute(
-            select(Account).where(Account.id == account_id)
-        )
+        result = await db_session.execute(select(Account).where(Account.id == account_id))
         account = result.scalar_one_or_none()
         if account is None:
             raise ValueError(f"Account {account_id} not found")
@@ -195,9 +191,7 @@ class PortfolioService:
         Raises:
             ValueError: If account not found.
         """
-        result = await db_session.execute(
-            select(Account).where(Account.id == account_id)
-        )
+        result = await db_session.execute(select(Account).where(Account.id == account_id))
         account = result.scalar_one_or_none()
         if account is None:
             raise ValueError(f"Account {account_id} not found")

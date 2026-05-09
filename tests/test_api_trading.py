@@ -1,7 +1,6 @@
 """API integration tests for trading endpoints."""
 
 from decimal import Decimal
-from unittest.mock import MagicMock, patch
 
 import pytest
 from fastapi.testclient import TestClient
@@ -9,7 +8,7 @@ from sqlalchemy import select
 
 from app.api.deps import get_db
 from app.main import app
-from app.models import Account, CryptoHolding, StockHolding
+from app.models import Account, StockHolding
 from app.schemas.trading import BuyQuote, SellQuote
 from app.services.trading.execution import TradingExecutionService
 from app.services.trading.quote import QuoteService
@@ -88,9 +87,7 @@ class TestBuyAPIEndpoints:
             assert "id" in data
 
             # Cash should not be deducted
-            result = await db_session.execute(
-                select(Account).where(Account.id == account.id)
-            )
+            result = await db_session.execute(select(Account).where(Account.id == account.id))
             updated = result.scalar_one()
             assert updated.cash_balance == Decimal("100000.00")
         finally:
@@ -136,12 +133,10 @@ class TestBuyAPIEndpoints:
             assert data["status"] == "CONFIRMED"
             assert data["id"] == pending.id
             assert data["type"] == "buy"
-            assert data["quantity"] == "10"
+            assert data["quantity"] == "10.00000000"
 
             # Cash deducted
-            result = await db_session.execute(
-                select(Account).where(Account.id == account.id)
-            )
+            result = await db_session.execute(select(Account).where(Account.id == account.id))
             updated = result.scalar_one()
             assert updated.cash_balance == Decimal("98500.00")
         finally:
@@ -149,6 +144,7 @@ class TestBuyAPIEndpoints:
 
     async def test_buy_confirm_not_found(self, db_session):
         """Confirming a non-existent transaction returns 400."""
+
         async def override_get_db():
             yield db_session
 
@@ -281,12 +277,10 @@ class TestSellAPIEndpoints:
             assert data["status"] == "CONFIRMED"
             assert data["id"] == pending.id
             assert data["type"] == "sell"
-            assert data["quantity"] == "4"
+            assert data["quantity"] == "4.00000000"
 
             # Cash added
-            result = await db_session.execute(
-                select(Account).where(Account.id == account.id)
-            )
+            result = await db_session.execute(select(Account).where(Account.id == account.id))
             updated = result.scalar_one()
             assert updated.cash_balance == Decimal("100600.00")
         finally:
@@ -294,6 +288,7 @@ class TestSellAPIEndpoints:
 
     async def test_sell_confirm_not_found(self, db_session):
         """Confirming a non-existent sell returns 400."""
+
         async def override_get_db():
             yield db_session
 

@@ -1,7 +1,7 @@
 """Error handling middleware."""
 
 import traceback
-from typing import Awaitable, Callable
+from collections.abc import Awaitable, Callable
 
 from fastapi import Request, Response
 from fastapi.responses import JSONResponse
@@ -34,8 +34,10 @@ class ErrorHandlerMiddleware(BaseHTTPMiddleware):
                 status_code=500,
                 content={
                     "error": "Internal server error",
-                    "detail": str(exc)
-                    if __import__("app.core.config").core.config.settings.debug
-                    else "An unexpected error occurred",
+                    "detail": (
+                        str(exc)
+                        if __import__("app.core.config").core.config.settings.debug
+                        else "An unexpected error occurred"
+                    ),
                 },
             )

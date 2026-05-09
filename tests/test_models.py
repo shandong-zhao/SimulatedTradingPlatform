@@ -5,7 +5,7 @@ from decimal import Decimal
 import pytest
 from sqlalchemy import select
 
-from app.models import Account, StockHolding, CryptoHolding, Transaction
+from app.models import Account, StockHolding, Transaction
 
 
 @pytest.mark.asyncio
@@ -79,7 +79,9 @@ class TestTransaction:
         db_session.add(transaction)
         await db_session.commit()
 
-        result = await db_session.execute(select(Transaction).where(Transaction.id == transaction.id))
+        result = await db_session.execute(
+            select(Transaction).where(Transaction.id == transaction.id)
+        )
         stored = result.scalar_one()
         assert stored.type == "buy"
         assert stored.total_usd_value == Decimal("1500.00")

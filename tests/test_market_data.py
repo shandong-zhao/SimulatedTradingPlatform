@@ -1,7 +1,7 @@
 """Tests for market data services."""
 
 from decimal import Decimal
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import MagicMock, patch
 
 import pytest
 
@@ -116,9 +116,11 @@ class TestCoinGeckoProvider:
         """Test price fetch when no data returned."""
         provider = CoinGeckoProvider()
 
-        with patch.object(provider._client, "get_price", return_value={}):
-            with pytest.raises(Exception, match="No price data found"):
-                await provider.get_price("unknowncoin")
+        with (
+            patch.object(provider._client, "get_price", return_value={}),
+            pytest.raises(Exception, match="No price data found"),
+        ):
+            await provider.get_price("unknowncoin")
 
     async def test_is_available(self):
         """Test availability check."""
@@ -130,7 +132,7 @@ class TestCoinGeckoProvider:
 class TestExchangeRateService:
     """Test ExchangeRateService."""
 
-    async def test_get_rate_success(self, httpx_mock):
+    async def test_get_rate_success(self):
         """Test successful rate fetch."""
         service = ExchangeRateService()
 
@@ -181,6 +183,7 @@ class TestPriceResolver:
     async def test_get_price_stock_routes_to_yahoo(self):
         """Test stock symbol routes to Yahoo Finance."""
         resolver = PriceResolver()
+        resolver.clear_cache()
         resolver._yahoo = FakeProvider(price=Decimal("150.0"))
         resolver._coingecko = FakeProvider(price=Decimal("0"))
 
@@ -191,6 +194,7 @@ class TestPriceResolver:
     async def test_get_price_crypto_routes_to_coingecko(self):
         """Test crypto symbol routes to CoinGecko."""
         resolver = PriceResolver()
+        resolver.clear_cache()
         resolver._yahoo = FakeProvider(price=Decimal("0"))
         resolver._coingecko = FakeProvider(price=Decimal("50000.0"))
 
@@ -201,6 +205,7 @@ class TestPriceResolver:
     async def test_get_price_fallback(self):
         """Test fallback when primary provider fails."""
         resolver = PriceResolver()
+        resolver.clear_cache()
         resolver._yahoo = FakeProvider(price=Decimal("150.0"))
         resolver._coingecko = FakeProvider(available=False)
 
@@ -212,6 +217,7 @@ class TestPriceResolver:
     async def test_get_price_all_providers_fail(self):
         """Test exception when all providers fail."""
         resolver = PriceResolver()
+        resolver.clear_cache()
         resolver._yahoo = FakeProvider(available=False)
         resolver._coingecko = FakeProvider(available=False)
 
